@@ -1,0 +1,129 @@
+getwd()
+
+setwd("~/work/mellado/MetNet/fed-batch/tnf/analysis_patrick/Files")
+setwd("C:/Users/User/Desktop")
+
+concs <- read.table("TNF_concentrations.tab", header=T, row.names=1)
+rates <- read.table("calculated_rates.tab", header=T, row.names=1)
+rates <- read.table("processed_rates.csv", header=T, row.names=1)
+
+str(rates) #shows the structure of the dataset,including class and head of data
+
+
+attach(concs)
+
+
+#----------------GENERAL LM USING ALL VARIABLES----------------#
+
+xxxlm <- lm(rates$xxx ~ X4crsol + X5drib + amob + dalua + X5mtr + ala
+		+ asp + cobalt + cu2 + fe3 + glc + glu + gly + h2o2 + his
+		+ ile + leu + lys + met + mobd + nh4 + ni2 + phe + pro + pyr
+		+ ser + succ + thr + tyr + urea + val + tnf)
+	summary(xxxlm)
+	
+			
+#----------------MULTIPLE REGRESSION FOR ALANINE---------------#
+
+
+alalm <- lm(rates$ala ~ tnf + pyr + succ + glc + nh4)
+summary(alalm)
+
+#----------------MULTIPLE REGRESSION FOR TNF-------------------#
+
+
+tnflm <- lm(rates$tnf~ glc + nh4 + ala)
+summary(tnflm)
+
+#----------------MULTIPLE REGRESSION FOR FOR NH4---------------#
+
+
+nh4lm<- lm(rates$nh4 ~ ala + glc + gly + lys + met + phe + pyr + succ + thr + urea)
+summary(nh4lm)
+
+#----------------MULTIPLE REGRESSION FOR GLUCOSE-------------------#
+
+glclm <-  lm(rates$glc~ fe3 + ala + pyr + tnf)
+summary(glclm)
+
+#----------------MULTIPLE REGRESSION FOR PYRUVATE-------------------#
+
+pyrlm <- lm(rates$pyr ~ asp + glc + nh4 + succ + phe + ser)
+summary(pyrlm)
+
+#----------------MULTIPLE REGRESSION FOR SUCCINATE-------------------#
+
+succlm <- lm(rates$succ ~ glc + met + nh4 + tnf + pyr + thr)
+summary(succlm)
+
+#----------------MULTIPLE REGRESSION FOR ASPARTIC ACID---------------#
+
+asplm <- lm(rates$asp~ tnf + glc + glu + lys + pyr + ser + succ + thr)
+summary(asplm)	
+
+#----------------MULTIPLE REGRESSION FOR GLUTAMINE---------------#
+
+glulm <-  lm(rates$glu~ tnf + glc + lys + pyr + ser + succ + thr)
+summary(glulm)
+
+#----------------MULTIPLE REGRESSION FOR SERINE---------------#
+
+serlm <- lm(rates$ser ~ tnf + glc + glu + lys + pyr + ser + succ + thr)
+summary(serlm)
+
+#----------------MULTIPLE REGRESSION FOR HISTIDINE---------------#
+
+hislm <-  lm(rates$his ~ nh4 + tnf)
+summary(hislm)
+
+#----------------MULTIPLE REGRESSION FOR VALINE---------------#
+
+vallm <-  lm(rates$val ~ nh4 + tnf)
+summary(vallm)
+
+#----------------MULTIPLE REGRESSION FOR LEUCINE---------------#
+
+leulm <-  lm(rates$leu ~ nh4 + tnf)
+summary(leulm)
+
+#----------------MULTIPLE REGRESSION FOR ISOLEUCINE---------------#
+
+ilelm <-  lm(rates$ile ~ nh4 + tnf)
+summary(ilelm)
+
+#----------------MULTIPLE REGRESSION FOR PROLINE---------------#
+
+prolm <-  lm(rates$pro ~ nh4 + tnf)
+summary(prolm)
+#----------------MULTIPLE REGRESSION FOR TYROSINE---------------#
+
+tyrlm <- lm(rates$tyr ~ nh4 + tnf)
+summary(tyrlm)
+
+#----------------MULTIPLE REGRESSION FOR PHENYLALANINE--------------#
+
+phelm <- lm(rates$phe ~  fe3 + nh4 + ser + tnf)
+summary(phelm)
+
+#----------------MULTIPLE REGRESSION FOR METHIONINE--------------#
+
+metlm <- lm(rates$met ~ glc + lys + pyr + ser + thr)
+summary(metlm)
+
+#----------------MULTIPLE REGRESSION FOR LYSINE--------------#
+
+lyslm <- lm(rates$lys ~ asp + glc + met + nh4 + ser + succ)
+summary(lyslm)
+
+#----------------MULTIPLE REGRESSION FOR GLYCINE---------------#
+
+glylm <- lm(rates$gly ~ glu + met + phe + pyr + succ + thr)
+summary(glylm)
+
+#----------------MULTIPLE REGRESSION FOR THREONINE---------------#
+
+thrlm <- lm(rates$thr ~ ala + glc + gly + his + lys + met + pyr + phe + succ)
+summary(thrlm)
+
+
+
+

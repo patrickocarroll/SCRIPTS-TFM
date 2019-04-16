@@ -1,0 +1,136 @@
+#REQUIRES RUNNING SCRIPT "LINEAR MODELS" IN WHICH EACH LINEAR MODEL IS GENERATED
+
+#----------------GENERATING THE EQUATIONS FOR EACH MODEL-------------#
+
+
+sink("equations.txt")
+
+print("This document contains the formula representing each model.") 
+print("Each plot shows the response of the dependent variable in the simulation
+and the trend that the generated model follows")
+
+
+
+lm <- alalm
+cc <- lm$coefficients
+eqn <- paste("Alanine=", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- tnflm
+cc <- lm$coefficients
+eqn <- paste("TNF-alpha =", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- nh4lm
+cc <- lm$coefficients
+eqn <- paste("NH4 =", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- glclm
+cc <- lm$coefficients
+eqn <- paste("Glucose=", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+lm <- pyrlm
+cc <- lm$coefficients
+eqn <- paste("Pyruvate=", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- succlm
+cc <- lm$coefficients
+eqn <- paste("Succinate =", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- asplm
+cc <- lm$coefficients
+eqn <- paste("Aspartic acid=", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- glulm
+cc <- lm$coefficients
+eqn <- paste("Glutamine=", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- serlm
+cc <- lm$coefficients
+eqn <- paste("Serine =", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- hislm
+cc <- lm$coefficients
+eqn <- paste("Histidine =", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+lm <- vallm
+cc <- lm$coefficients
+eqn <- paste("Valine =", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- leulm
+cc <- lm$coefficients
+eqn <- paste("Leucine=", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- ilelm
+cc <- lm$coefficients
+eqn <- paste("Isoleucine=", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- prolm
+cc <- lm$coefficients
+eqn <- paste("Proline =", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- tyrlm
+cc <- lm$coefficients
+eqn <- paste("Tyrosine =", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- phelm
+cc <- lm$coefficients
+eqn <- paste("Phenylalanine =", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- metlm
+cc <- lm$coefficients
+eqn <- paste("Methionine =", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- lyslm
+cc <- lm$coefficients
+eqn <- paste("Lysine =", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- glylm
+cc <- lm$coefficients
+eqn <- paste("Glycine=", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+lm <- thrlm
+cc <- lm$coefficients
+eqn <- paste("Threonine=", paste(scientific((cc[1]), digits=3), paste(scientific((cc[-1]), digits=3), names(cc[-1]), sep=" * ", collapse=" + "), sep=" + "))
+print(eqn)
+
+
+
+
+sink()
+
+

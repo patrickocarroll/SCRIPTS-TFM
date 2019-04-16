@@ -1,0 +1,102 @@
+install.packages('mlr')
+
+library(mlr)
+
+getwd()
+
+setwd("~/work/mellado/MetNet/fed-batch/tnf/analysis_patrick")
+setwd('C:/Users/User/Desktop')
+
+concs <- read.table("TNF_concentrations.tab", header=T, row.names=1)
+rates <- read.table("processed_rates.csv", header=T, row.names=1)
+
+
+#------CONVERTING DATASET INTO CONVENIENT FORMAT (AKA CONSTRUCTING A TASK)------#
+
+task <- makeRegrTask(data, target, id...) 
+
+getTaskDesc(task)
+
+str(getTaskDesc(task))
+
+dropFeatures(task, c("var1", "var2")) #If you want to eliminate variables from the dataset
+
+#------SETTING THE METHODS WE WANT TO USE (AKA CONSTRUCTING A LEARNER)-------#
+
+learner <- makeLearner("regr.lm")
+
+learner #shows the features of the learning model
+learner$predict.type #will tell you the type of prediction you are aiming for
+learner$par.set #will show the parameters involved
+
+getHyperPars(learner)
+getParamSet(classif.lrn)
+listLearners("regr") #will list the classes of regression learner types
+
+#-----------------TRAINING THE LEARNER WITH OUR SUITABLE TASK-----------------#
+
+model <- train(learner, task)
+
+model$features
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+summary(result)
+
+#SUBSETTING DATA FOR TRAINING:
+#(however standard resampling strategies can be implemented)
+
+n <- getTaskSize(task)
+train.set <- sample(n, size=n/3)
+
+trainmodel <- train(learner, task, subset= train.set)
+
+#--------------MAKING PREDICTIONS----------#
+
+pred <- predict(model, task)
+
+pred 
+#will show prediction results
+
+getPredictionResponse(pred)
+
+listLearner("regr, check.packages=F, properties"se")[c("class", "name")] #will show types of regression 
+
+#---------------PROCESSING THE DATA--------------#
+
+#List of useful commands in order to process different aspects of the data:
+
+createDummyFeatures() #Generate dummy features for factor values
+dropFeatures() #Remove selected features
+normalizesFeatures() #Normalize feautres by different methods
+removeConstantFeatures() #Removes constant features
+subsetTask() #Remove observations or features from a Task()
+makePreprocWrapperCaret() #Interface to all preprocessing options offered by caret package
+
+
+#---------------EVALUATING LEARNER PERFORMANCE-------------#
+
+performance(pred, measures= list(mse, medse, mae))
+
+#--------------RESAMPLING THE DATA----------------------#
+
+resample <- makeResampleDesc("CV", iters= 3) #Defining the resampling strategy. Default split is 2/3
+resample
+
+#Cross-validation = "CV"; Out-of-Bag Bootstrap = "Bootstrap"; Subsampling monte-carlo = "Subsample")...
+
+resample <- cv10(pred, predict="train, test or both") #command is to do cross-validation split in 10
+
+
+r<- resample(learner, task, resample)
+
+r$aggr  #Shows the aggregated (sum of iters) performance value
+
+
+#--------------TUNING PARAMETERS-----------------------#
+
+tune <- tuneParams(learner, task, resample)
+		
+
+
+
+

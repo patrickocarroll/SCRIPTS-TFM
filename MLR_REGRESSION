@@ -1,0 +1,101 @@
+getwd()
+
+setwd("~/work/mellado/MetNet/fed-batch/tnf/analysis_patrick")
+setwd('C:/Users/User/Desktop')
+
+concs <- read.table("TNF_concentrations.tab", header=T, row.names=1)
+rates <- read.table("calculated_rates.tab", header=T, row.names=1)
+
+attach(concs)
+
+#------CONVERTING DATASET INTO CONVENIENT FORMAT (AKA CONSTRUCTING A TASK)------#
+
+#IMPORTANT: Target value must be part of the 'data' dataset:
+#We specifically select the variables of interest
+
+ratesconcs <- data.frame(cbind(rates$ala, fe3, glc, gly, glu, lys, met, nh4, phe, pyr, ser, succ, urea, tnf))
+colnames(ratesconcs)[1] <- "rates.ala" #renaming the target variable in the dataframe (sometimes it changes)
+
+#Now when refering to 'rates$ala' we must type 'rates.ala'
+#New dataset is called 'ratesconcs'
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.ala") 
+
+
+getTaskDesc(task) #Useful for checking that everything is correct
+
+str(getTaskDesc(task))
+
+
+#------SETTING THE METHODS WE WANT TO USE (AKA CONSTRUCTING A LEARNER)-------#
+
+learner <- makeLearner("regr.lm")
+
+learner #shows the features of the learning model
+
+
+#-----------------TRAINING THE LEARNER WITH OUR SUITABLE TASK-----------------#
+
+model <- train(learner, task)
+
+model$features #variables that are being included in the model
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+summary(result)
+
+
+#--------------RESAMPLING THE DATA----------------------#
+
+resample <- makeResampleDesc("CV", iters= 3) #Defining the resampling strategy. Default split is 2/3
+resample
+
+#Types of strategies: Cross-validation = "CV"; Out-of-Bag Bootstrap = "Bootstrap"; Subsampling monte-carlo = "Subsample")...
+
+resample <- cv10(model) #command is to do cross-validation split in 10
+
+
+r<- resample(learner, task, resample) #This is the actual test
+
+r$aggr  #Shows the aggregated (sum of iters) performance value
+
+#-----------FEATURE SELECTION USING FILTER METHODS-----------#
+
+resample <- makeResampleDesc("CV", iters = 10)
+
+ctrl <- makeFeatSelControlSequential(method = "sfs", maxit = NA)
+
+sf <- selectFeatures(learner, task, resample, control=ctrl, show.info=T)
+
+
+
+#--------------MULTIVARIATE ADAPTIVE REGRESSION SPLINE (MARS/EARTH)-----------#
+#MAIN DIFFERENCE IS THAT YOU MUST CHANGE THE LEARNER (FORM LM TO MARS)
+
+library(mda)
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.ala") 
+
+
+getTaskDesc(task) #Useful for checking that everything is correct
+
+str(getTaskDesc(task))
+
+learner <- makeLearner("regr.crs", prune=TRUE, model.return=TRUE, degree.max=20, segments.max=20)
+#OR
+learner <- makeLearner("regr.mars", trace.mars=TRUE)
+
+model <- train(learner, task)
+
+model$features #variables that are being included in the model
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+summary(result)
+
+#-----------VISUALIZING THE RESULT----------------#
+
+#FOR MARS LEARNER:
+
+plot(rates$ala, xlab="Time", ylab="Alanine Rate")
+lines(result$fitted.values, col=2)
+

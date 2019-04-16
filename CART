@@ -1,0 +1,450 @@
+#install.packages('rpart')
+#install.packages('rpart.plot')
+#Summary of process:
+#Create linear model with all variables ->  Perform stepwise selection -> 
+#Create CART model using the reduced variable model -> Plot the model
+
+library(rpart)
+library(rpart.plot)
+
+getwd()
+setwd('C:/Users/User/Desktop')
+#setwd("~/work/mellado/MetNet/fed-batch/tnf/analysis_patrick")
+
+#concs <- read.table("data/TNF_concentrations.tab", header=T, row.names=1)
+#rates <- read.table("data/processed_rates.csv", header=T, row.names=1)	
+
+concs <- read.table("TNF_concentrations.tab", header=T, row.names=1)
+rates <- read.table("calculated_rates.tab", header=T, row.names=1)	
+
+attach(concs)
+
+#---------CART FOR ALANINE--------#
+
+#CONSIDER VARIABLES OBTAINED USING STEPWISE SELECTION
+#For this we first must create the general model including all variables
+
+alalm <- lm(rates$ala ~ asp + fe3 + glc + glu + gly + h2o2 + his
+			+ lys + met + nh4 + phe + pyr
+		+ ser + succ + thr + urea + tnf)
+	summary(alalm)
+
+
+library(MASS)
+setwd('C:/Users/User/Desktop/CART')
+
+alastep <- stepAIC(alalm, direction="both") #Command by which we perform stepwise selection. arguments are our model and direction (forward, backward, both)
+step$anova # display results 
+summary(alastep)
+
+alacart <- rpart(alastep, method="anova")
+
+#alacart <- rpart(rates$ala ~., data=concs, method="anova")
+#we use "anova" because our target is a numerical feature
+
+#first variable appearing in results table means more predictive significance
+
+jpeg(filename="alaCART.jpg", quality=100)
+						
+rpart.plot(alacart, type=3, digits=3, fallen.leaves=T,
+			 box.palette=c('BuGn'), tweak=1.1, clip.facs=T,
+			 shadow.col= 'darkgray', main='ALANINE REGRESSION TREE')
+			
+			 
+dev.off()	
+
+# sub='Each terminal leave represents an interval of the dependent variable,
+#			 determined by the influence of the independent variables')						
+#When plotting we can see the main variables
+#The fallen leaves show a number which is the predicted outcome value
+#These numbers show the progressively ascendent values for the rate of alanine
+#The numbers represent the outcome variable for that subset of the data
+
+#TESTING ACCURACY PERFORMANCE
+
+
+#---------CART FOR TNF--------#
+
+#CONSIDER VARIABLES OBTAINED USING STEPWISE SELECTION
+#For this we first must create the general model including all variables
+
+tnflm <- lm(rates$tnf ~ ala
+		+ asp + fe3 + glc + glu + gly + h2o2 + his
+		+ met + nh4 + phe + pro + pyr
+		+ ser + succ + thr + tyr + urea)
+	summary(tnflm)
+	
+tnfstep <- stepAIC(tnflm, direction="both")
+summary(tnfstep)
+
+tnfcart <- rpart(tnfstep, method="anova")
+
+jpeg(filename="tnfCART.jpg", quality=100)
+						
+rpart.plot(tnfcart, type=3, digits=3, fallen.leaves=T,
+			 box.palette=c('BuGn'), tweak=1.1, clip.facs=T,
+			 shadow.col= 'darkgray', main='TNF REGRESSION TREE')
+			
+			 
+dev.off()	
+
+
+#---------CART FOR NH4--------#
+
+#CONSIDER VARIABLES OBTAINED USING STEPWISE SELECTION
+#For this we first must create the general model including all variables
+
+nh4lm <- lm(rates$nh4 ~ ala
+		+ asp + fe3 + glc + glu + gly + h2o2 + his
+		+ ile + leu + lys + met + phe + pro + pyr
+		+ ser + succ + thr + tyr + urea + val + tnf)
+	summary(nh4lm)
+
+
+nh4step <- stepAIC(nh4lm, direction="both")
+summary(nh4step)
+
+nh4cart <- rpart(nh4step, method="anova")
+
+jpeg(filename="nh4CART.jpg", quality=100)
+						
+rpart.plot(nh4cart, type=3, digits=3, fallen.leaves=T,
+			 box.palette=c('BuGn'), tweak=1.1, clip.facs=T,
+			 shadow.col= 'darkgray', main='NH4 REGRESSION TREE')
+			
+			 
+dev.off()	
+
+
+#---------CART FOR GLC--------#
+
+#CONSIDER VARIABLES OBTAINED USING STEPWISE SELECTION
+#For this we first must create the general model including all variables
+
+glclm <- lm(rates$glc ~ ala
+		+ asp + fe3 + glu + gly + h2o2 + his
+		+ ile + leu + lys + met + nh4 + phe + pro + pyr
+		+ ser + succ + thr + tyr + urea + val + tnf)
+	summary(glclm)
+
+
+glcstep <- stepAIC(glclm, direction="both")
+summary(glcstep)
+
+glccart <- rpart(glcstep, method="anova")
+
+jpeg(filename="glcCART.jpg", quality=100)
+						
+rpart.plot(glccart, type=3, digits=3, fallen.leaves=T,
+			 box.palette=c('BuGn'), tweak=1.1, clip.facs=T,
+			 shadow.col= 'darkgray', main='GLUCOSE REGRESSION TREE')
+			
+			 
+dev.off()	
+
+
+#---------CART FOR PYRUVATE--------#
+
+#CONSIDER VARIABLES OBTAINED USING STEPWISE SELECTION
+#For this we first must create the general model including all variables
+
+pyrlm <- lm(rates$pyr ~ ala
+		+ asp + fe3 + glc + glu + gly + h2o2 + his
+		+ ile + leu + lys + met + nh4 + phe + pro 
+		+ ser + succ + thr + tyr + urea + val + tnf)
+	summary(pyrlm)
+
+
+pyrstep <- stepAIC(pyrlm, direction="both")
+summary(pyrstep)
+
+pyrcart <- rpart(pyrstep, method="anova")
+
+jpeg(filename="pyrCART.jpg", quality=100)
+						
+rpart.plot(pyrcart, type=3, digits=3, fallen.leaves=T,
+			 box.palette=c('BuGn'), tweak=1.1, clip.facs=T,
+			 shadow.col= 'darkgray', main='PYRUVATE REGRESSION TREE')
+			
+			 
+dev.off()	
+
+
+#---------CART FOR SUCCINATE--------#
+
+#CONSIDER VARIABLES OBTAINED USING STEPWISE SELECTION
+#For this we first must create the general model including all variables
+
+succlm <- lm(rates$succ ~ ala
+		+ asp + fe3 + glc + glu + gly + h2o2 + his
+		+ ile + leu + lys + met + nh4 + phe + pro + pyr
+		+ ser + thr + tyr + urea + val + tnf)
+	summary(succlm)
+
+
+succstep <- stepAIC(succlm, direction="both")
+summary(succstep)
+
+succcart <- rpart(succstep, method="anova")
+
+jpeg(filename="succCART.jpg", quality=100)
+						
+rpart.plot(succcart, type=3, digits=3, fallen.leaves=T,
+			 box.palette=c('BuGn'), tweak=1.1, clip.facs=T,
+			 shadow.col= 'darkgray', main='SUCCINATE REGRESSION TREE')
+			
+			 
+dev.off()	
+
+
+#---------CART FOR PHENYLALANINE--------#
+
+#CONSIDER VARIABLES OBTAINED USING STEPWISE SELECTION
+#For this we first must create the general model including all variables
+
+phelm <- lm(rates$phe ~ ala
+		+ asp + fe3 + glc + glu + gly + h2o2 + his
+		+ ile + leu + lys + met + nh4 + pro + pyr
+		+ ser + succ + thr + tyr + urea + val + tnf)
+	summary(phelm)
+
+
+phestep <- stepAIC(phelm, direction="both")
+summary(phestep)
+
+phecart <- rpart(phestep, method="anova")
+
+jpeg(filename="pheCART.jpg", quality=100)
+						
+rpart.plot(phecart, type=3, digits=3, fallen.leaves=T,
+			 box.palette=c('BuGn'), tweak=1.1, clip.facs=T,
+			 shadow.col= 'darkgray', main='PHENYLALANINE REGRESSION TREE')
+			
+			 
+dev.off()	
+
+
+
+#---------CART FOR HISTIDINE--------#
+
+#CONSIDER VARIABLES OBTAINED USING STEPWISE SELECTION
+#For this we first must create the general model including all variables
+
+hislm <- lm(rates$his ~ ala
+		+ asp + fe3 + glc + glu + gly + h2o2
+		+ ile + leu + lys + met + nh4 + phe + pro + pyr
+		+ ser + succ + thr + tyr + urea + val + tnf)
+	summary(hislm)
+
+
+hisstep <- stepAIC(hislm, direction="both")
+summary(hisstep)
+
+hiscart <- rpart(hisstep, method="anova")
+
+jpeg(filename="hisCART.jpg", quality=100)
+						
+rpart.plot(hiscart, type=3, digits=3, fallen.leaves=T,
+			 box.palette=c('BuGn'), tweak=1.1, clip.facs=T,
+			 shadow.col= 'darkgray', main='HISTIDINE REGRESSION TREE')
+			
+			 
+dev.off()	
+
+
+
+
+#---------CART FOR METHIONINE--------#
+
+#CONSIDER VARIABLES OBTAINED USING STEPWISE SELECTION
+#For this we first must create the general model including all variables
+
+metlm <- lm(rates$met ~ ala
+		+ asp + fe3 + glc + glu + gly + h2o2 + his
+		+ ile + leu + lys + nh4 + phe + pro + pyr
+		+ ser + succ + thr + tyr + urea + val + tnf)
+	summary(metlm)
+
+
+metstep <- stepAIC(metlm, direction="both")
+summary(metstep)
+
+metcart <- rpart(metstep, method="anova")
+
+jpeg(filename="metCART.jpg", quality=100)
+						
+rpart.plot(metcart, type=3, digits=3, fallen.leaves=T,
+			 box.palette=c('BuGn'), tweak=1.1, clip.facs=T,
+			 shadow.col= 'darkgray', main='METHIONINE REGRESSION TREE')
+			
+			 
+dev.off()	
+
+
+
+
+#---------CART FOR LYSINE--------#
+
+#CONSIDER VARIABLES OBTAINED USING STEPWISE SELECTION
+#For this we first must create the general model including all variables
+
+lyslm <- lm(rates$lys ~ ala
+		+ asp + fe3 + glc + glu + gly + h2o2 + his
+		+ ile + leu + met + nh4 + phe + pro + pyr
+		+ ser + succ + thr + tyr + urea + val + tnf)
+	summary(lyslm)
+
+
+lysstep <- stepAIC(lyslm, direction="both")
+summary(lysstep)
+
+lyscart <- rpart(lysstep, method="anova")
+
+jpeg(filename="lysCART.jpg", quality=100)
+						
+rpart.plot(lyscart, type=3, digits=3, fallen.leaves=T,
+			 box.palette=c('BuGn'), tweak=1.1, clip.facs=T,
+			 shadow.col= 'darkgray', main='LYSINE REGRESSION TREE')
+			
+			 
+dev.off()	
+
+
+
+
+#---------CART FOR GLYCINE--------#
+
+#CONSIDER VARIABLES OBTAINED USING STEPWISE SELECTION
+#For this we first must create the general model including all variables
+
+glylm <- lm(rates$gly ~ ala
+		+ asp + fe3 + glc + glu + h2o2 + his
+		+ ile + leu + lys + met + nh4 + phe + pro + pyr
+		+ ser + succ + thr + tyr + urea + val + tnf)
+	summary(glylm)
+
+
+glystep <- stepAIC(glylm, direction="both")
+summary(glystep)
+
+glycart <- rpart(glystep, method="anova")
+
+
+jpeg(filename="glyCART.jpg", quality=100)
+						
+rpart.plot(glycart, type=3, digits=3, fallen.leaves=T,
+			 box.palette=c('BuGn'), tweak=1.1, clip.facs=T,
+			 shadow.col= 'darkgray', main='GLYCINE REGRESSION TREE')
+			
+			 
+dev.off()	
+
+
+#---------CART FOR SERINE--------#
+
+#CONSIDER VARIABLES OBTAINED USING STEPWISE SELECTION
+#For this we first must create the general model including all variables
+
+serlm <- lm(rates$ser ~ ala
+		+ asp + fe3 + glc + glu + gly + h2o2 + his
+		+ ile + leu + lys + met + nh4 + phe + pro + pyr
+		+ succ + thr + tyr + urea + val + tnf)
+	summary(serlm)
+
+
+serstep <- stepAIC(serlm, direction="both")
+summary(serstep)
+
+sercart <- rpart(serstep, method="anova")
+
+jpeg(filename="serCART.jpg", quality=100)
+						
+rpart.plot(sercart, type=3, digits=3, fallen.leaves=T,
+			 box.palette=c('BuGn'), tweak=1.1, clip.facs=T,
+			 shadow.col= 'darkgray', main='SERINE REGRESSION TREE')
+			
+			 
+dev.off()	
+
+
+#---------CART FOR ASPARTIC ACID--------#
+
+#CONSIDER VARIABLES OBTAINED USING STEPWISE SELECTION
+#For this we first must create the general model including all variables
+
+asplm <- lm(rates$asp ~ ala
+		+ fe3 + glc + glu + gly + h2o2 + his
+		+ ile + leu + lys + met + nh4 + phe + pro + pyr
+		+ ser + succ + thr + tyr + urea + val + tnf)
+	summary(asplm)
+
+
+aspstep <- stepAIC(asplm, direction="both")
+summary(aspstep)
+
+aspcart <- rpart(aspstep, method="anova")
+
+jpeg(filename="aspCART.jpg", quality=100)
+						
+rpart.plot(aspcart, type=3, digits=3, fallen.leaves=T,
+			 box.palette=c('BuGn'), tweak=1.1, clip.facs=T,
+			 shadow.col= 'darkgray', main='ASPARTIC ACID REGRESSION TREE')
+			
+			 
+dev.off()	
+
+
+#---------CART FOR THREONINE--------#
+
+#CONSIDER VARIABLES OBTAINED USING STEPWISE SELECTION
+#For this we first must create the general model including all variables
+
+thrlm <- lm(rates$thr ~ ala
+		+ asp + fe3 + glc + glu + gly + h2o2 + his
+		+ ile + leu + lys + met + nh4 + phe + pro + pyr
+		+ ser + succ + tyr + urea + val + tnf)
+	summary(thrlm)
+
+
+thrstep <- stepAIC(thrlm, direction="both")
+summary(thrstep)
+
+thrcart <- rpart(thrstep, method="anova")
+
+jpeg(filename="thrCART.jpg", quality=100)
+						
+rpart.plot(thrcart, type=3, digits=3, fallen.leaves=T,
+			 box.palette=c('BuGn'), tweak=1.1, clip.facs=T,
+			 shadow.col= 'darkgray', main='THREONINE REGRESSION TREE')
+			
+			 
+dev.off()	
+
+
+#---------CART FOR GLUTAMINE--------#
+
+#CONSIDER VARIABLES OBTAINED USING STEPWISE SELECTION
+#For this we first must create the general model including all variables
+
+glulm <- lm(rates$glu ~ ala
+		+ asp + fe3 + glc + gly + h2o2 + his
+		+ ile + leu + lys + met + nh4 + phe + pro + pyr
+		+ ser + succ + thr + tyr + urea + val + tnf)
+	summary(glulm)
+
+
+glustep <- stepAIC(glulm, direction="both")
+summary(glustep)
+
+glucart <- rpart(glustep, method="anova")
+
+jpeg(filename="gluCART.jpg", quality=100)
+						
+rpart.plot(glucart, type=3, digits=3, fallen.leaves=T,
+			 box.palette=c('BuGn'), tweak=1.1, clip.facs=T,
+			 shadow.col= 'darkgray', main='GLUTAMINE REGRESSION TREE')
+			
+			 
+dev.off()	
+
+

@@ -1,0 +1,33 @@
+#LOAD DATASET AND EXTRACT SUBSET OF DESIRED METABOLITE
+
+getwd()
+setwd("~/Desktop")
+wt <- read.table("WT_concs.tab", header=T) #Loading concentrations file for WT
+wt <- t(wt) #Transpose matrix so that the columns are variables and rows are observations
+ala <- wt[, "EX_ala_L_(e)"] #Extract the column for desired metabolite (Alanine) 
+
+#The generated subset is technically a numerical list so we must create a dataframe
+
+Time <- c(1:30) #In this case there are 30 time-steps
+Alanine <- ala #Just to make it nice
+
+ala <- data.frame(Time, Alanine)
+plot(ala) #Just to make sure the input is correct
+
+x <- ala$Time
+y <- ala$Alanine       #We define variables as x and y to simplify the latter formula
+
+modelAla <- nls(y ~ a + ((b - a) / (1 + exp(-c * (x - d)))), 
+    start=list(a = min(y), b=max(y), c= 1, d=median(x)), 
+    trace=TRUE, algorithm="port")
+    
+#model is defined by a selected equation to fit a non linear model. In this case the formula is sigmoid, could consider changing it
+
+predict(modelAla) #will give the values at each time-point according to the newly fitted model
+
+plot(predict(modelAla), type="l", col=2, xlab="Time", ylab="Concentration") #will plot the fitted line 
+
+points(y, col=4) #will plot the datapoints of the measured metabolite
+
+
+

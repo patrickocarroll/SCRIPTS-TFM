@@ -1,0 +1,416 @@
+getwd()
+
+#setwd("~/work/mellado/MetNet/fed-batch/tnf/analysis_patrick")
+setwd('C:/Users/User/Desktop')
+
+library(mlr)
+library(earth)
+
+concs <- read.table("TNF_concentrations.tab", header=T, row.names=1)
+rates <- read.table("calculated_rates.tab", header=T, row.names=1)
+
+attach(concs)
+
+jpeg("EARTHMODEL1.jpg", width=800, height=550, quality=100) 
+
+par(mfrow=c(2, 5))
+#-------------ALANINE-----------#
+
+ratesconcs <- data.frame(cbind(rates$ala, asp, fe3, glc, glu, gly, h2o2, his, ile, leu, lys, met, nh4, phe, pro, pyr, ser, succ, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.ala" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.ala") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$ala)
+lines(predict(result), col=3)
+
+#---------TNF-----------#
+
+
+ratesconcs <- data.frame(cbind(rates$tnf, ala, asp, fe3, glc, glu, gly, h2o2, his, ile, leu, lys, met, nh4, phe, pro, pyr, ser, succ, thr, tyr, urea, val))
+colnames(ratesconcs)[1] <- "rates.tnf" #renaming the target variable in the dataframe (sometimes it changes)
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.tnf") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$tnf)
+lines(predict(result), col=3)
+
+#-------------NH4-----------#
+
+ratesconcs <- data.frame(cbind(rates$nh4, ala, asp, fe3, glc, glu, gly, h2o2, his, ile, leu, lys, met, phe, pro, pyr, ser, succ, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.nh4" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.nh4") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$nh4)
+lines(predict(result), col=3)
+
+#-------------GLUCOSE-----------#
+
+ratesconcs <- data.frame(cbind(rates$glc, ala, asp, fe3, glu, gly, h2o2, his, ile, leu, lys, met, nh4, phe, pro, pyr, ser, succ, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.glc" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.glc") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$glc)
+lines(predict(result), col=3)
+
+#-------------PYRUVATE-----------#
+
+ratesconcs <- data.frame(cbind(rates$pyr, ala, asp, fe3, glc, glu, gly, h2o2, his, ile, leu, lys, met, nh4, phe, pro, ser, succ, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.pyr" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.pyr") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print('Model generated for Pyruvate using machine learning methods')
+print(summary(result))
+
+plot(rates$pyr)
+lines(predict(result), col=3)
+
+#-------------SUCCINATE-----------#
+
+ratesconcs <- data.frame(cbind(rates$succ, ala, asp, fe3, glc, glu, gly, h2o2, his, ile, leu, lys, met, nh4, phe, pro, pyr, ser, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.succ" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.succ") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$succ)
+lines(predict(result), col=3)
+
+#-------------ASPARTIC ACID-----------#
+
+ratesconcs <- data.frame(cbind(rates$asp, ala, fe3, glc, glu, gly, h2o2, his, ile, leu, lys, met, nh4, phe, pro, pyr, ser, succ, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.asp" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.asp") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$asp)
+lines(predict(result), col=3)
+
+#-------------GLUTAMINE-----------#
+
+ratesconcs <- data.frame(cbind(rates$glu, ala, asp, fe3, glc, gly, h2o2, his, ile, leu, lys, met, nh4, phe, pro, pyr, ser, succ, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.glu" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.glu") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$glu)
+lines(predict(result), col=3)
+
+#-------------SERINE-----------#
+
+ratesconcs <- data.frame(cbind(rates$ser, ala, asp, fe3, glc, glu, gly, h2o2, his, ile, leu, lys, met, nh4, phe, pro, pyr, succ, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.ser" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.ser") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$ser)
+lines(predict(result), col=3)
+
+#-------------HISTIDINE-----------#
+
+ratesconcs <- data.frame(cbind(rates$his, ala, asp, fe3, glc, glu, gly, h2o2, ile, leu, lys, met, nh4, phe, pro, pyr, ser, succ, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.his" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.his") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$his)
+lines(predict(result), col=3)
+
+dev.off()
+
+jpeg("EARTHMODEL2.jpg", width=800, height=550, quality=100) 
+
+par(mfrow=c(2, 5))
+
+#-------------VALINE-----------#
+
+ratesconcs <- data.frame(cbind(rates$val, ala, asp, fe3, glc, glu, gly, h2o2, his, ile, leu, lys, met, nh4, phe, pro, pyr, ser, succ, thr, tyr, urea, tnf))
+colnames(ratesconcs)[1] <- "rates.val" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.val") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$val)
+lines(predict(result), col=3)
+
+#-------------LEUCINE-----------#
+
+ratesconcs <- data.frame(cbind(rates$leu, ala, asp, fe3, glc, glu, gly, h2o2, his, ile, lys, met, nh4, phe, pro, pyr, ser, succ, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.leu" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.leu") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$leu)
+lines(predict(result), col=3)
+
+#-------------ISOLEUCINE-----------#
+
+ratesconcs <- data.frame(cbind(rates$ile, ala, asp, fe3, glc, glu, gly, h2o2, his, leu, lys, met, nh4, phe, pro, pyr, ser, succ, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.ile" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.ile") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$ile)
+lines(predict(result), col=3)
+
+#-------------PROLINE-----------#
+
+ratesconcs <- data.frame(cbind(rates$pro, ala, asp, fe3, glc, glu, gly, h2o2, his, ile, leu, lys, met, nh4, phe, pyr, ser, succ, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.pro" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.pro") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$pro)
+lines(predict(result), col=3)
+
+#-------------TYROSINE-----------#
+
+ratesconcs <- data.frame(cbind(rates$tyr, ala, asp, fe3, glc, glu, gly, h2o2, his, ile, leu, lys, met, nh4, phe, pro, pyr, ser, succ, thr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.tyr" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.tyr") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$tyr)
+lines(predict(result), col=3)
+
+#-------------PHENYLALANINE-----------#
+
+ratesconcs <- data.frame(cbind(rates$phe, ala, asp, fe3, glc, glu, gly, h2o2, his, ile, leu, lys, met, nh4, pro, pyr, ser, succ, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.phe" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.phe") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$phe)
+lines(predict(result), col=3)
+
+#-------------METHIONINE-----------#
+
+ratesconcs <- data.frame(cbind(rates$met, ala, asp, fe3, glc, glu, gly, h2o2, his, ile, leu, lys, nh4, phe, pro, pyr, ser, succ, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.met" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.met") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$met)
+lines(predict(result), col=3)
+
+
+#-------------LYSINE-----------#
+
+ratesconcs <- data.frame(cbind(rates$lys, ala, asp, fe3, glc, glu, gly, h2o2, his, ile, leu, met, nh4, phe, pro, pyr, ser, succ, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.lys" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.lys") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$lys)
+lines(predict(result), col=3)
+
+
+#-------------GLYCINE-----------#
+
+ratesconcs <- data.frame(cbind(rates$gly, ala, asp, fe3, glc, glu, h2o2, his, ile, leu, lys, met, nh4, phe, pro, pyr, ser, succ, thr, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.gly" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.gly") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$gly)
+lines(predict(result), col=3)
+
+
+#-------------THREONINE-----------#
+
+ratesconcs <- data.frame(cbind(rates$thr, ala, asp, fe3, glc, glu, gly, h2o2, his, ile, leu, lys, met, nh4, phe, pro, pyr, ser, succ, tyr, urea, val, tnf))
+colnames(ratesconcs)[1] <- "rates.thr" #renaming the target variable in the dataframe (sometimes it changes)
+
+
+task <- makeRegrTask(data= ratesconcs, target= "rates.thr") 
+
+learner <- makeLearner("regr.earth")
+
+model <- train(learner, task)
+
+result <- getLearnerModel(model) #shows the outcome (results) of the constructed model
+
+print(summary(result))
+
+plot(rates$thr)
+lines(predict(result), col=3)
+
+dev.off()
+
+
+#---------TRYING NEW FEATURES OUT-----------#
+
+plotLearnerPrediction(learner, task, features= NULL) #features is where you are supposed to select two features
+
+curve <- generateLearningCurveData(learner, task)
+
+plotLearningCurve(curve)

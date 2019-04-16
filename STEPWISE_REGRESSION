@@ -1,0 +1,39 @@
+getwd()
+
+setwd("~/work/mellado/MetNet/fed-batch/tnf/analysis_patrick")
+
+concs <- read.table("TNF_concentrations.tab", header=T, row.names=1)
+rates <- read.table("processed_rates.csv", header=T, row.names=1)
+
+attach(concs)
+str(concs) #shows the structure of the dataset,including class and head of data
+
+
+getwd()
+
+setwd("~/work/mellado/MetNet/fed-batch/tnf/analysis_patrick")
+
+concs <- read.table("TNF_concentrations.tab", header=T, row.names=1)
+rates <- read.table("processed_rates.csv", header=T, row.names=1)
+
+attach(concs)
+
+
+library(MASS) #MASS is the package from which we use stepAIC()
+
+
+succlm <- lm(rates$succ ~ X4crsol + ala
+		+ fe3 + glc + glu + gly + h2o2 
+		+ lys + met + nh4 + phe +  pyr
+		+ succ + thr)
+	summary(succlm)
+	
+succlm <- lm(rates$succ ~ tnf + fe3 + phe + glc + ala + nh4)
+summary(pyrlm)
+
+tnflm <- lm(rates$tnf ~ ala + glc + tnf)
+
+
+step <- stepAIC(alalm, direction="both") #Command by which we perform stepwise selection. arguments are our model and direction (forward, backward, both)
+step$anova # display results 
+summary(step)

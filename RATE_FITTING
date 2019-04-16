@@ -1,0 +1,72 @@
+#THE FILE WE WILL LOAD IS ALREADY PROCESSED AND COMPOSED OF 43 COLUMNS (metabolites) AND 434 ROWS (time-steps) 
+
+getwd()
+setwd("~/Desktop")
+
+tnf_rates <- read.table("TNF_concs.tab", header=T)
+
+attach(tnf_rates)
+
+png("Rates1.png", width=800, height=550) 
+
+par(mfrow=c(2, 4)) #plotting eight graphs in the same display
+ plot(Time, X4crsol, xlab="Time", ylab="4- Cresol", col=2)
+ plot(Time, X5drib, xlab="Time", ylab="5drib", col=3)
+ plot(Time, amob, xlab="Time", ylab="amob", col=4)
+ plot(Time, dalua, xlab="Time", ylab="dalua", col=5)
+ plot(Time, X5mtr, xlab="Time", ylab="5mtr", col=6)
+ plot(Time, ala, xlab="Time", ylab="Alanine", col=7)
+ plot(Time, alltn, xlab="Time", ylab="alltn", col=8)
+ plot(Time, asp, xlab="Time", ylab="Asparangine", col=9)
+ 
+ dev.off()
+
+png("Rates2.png", width=800, height=550) 
+ 
+ par(mfrow=c(2, 4))
+ plot(Time, cobalt, xlab="Time", ylab="Cobalt", col=2)
+ plot(Time, cu2, xlab="Time", ylab="Cu2+", col=3)
+ plot(Time, fe3, xlab="Time", ylab="Fe3+", col=4)
+ plot(Time, glc, xlab="Time", ylab="Glucose", col=5)
+ plot(Time, glu, xlab="Time", ylab="Glutamate", col=6)
+ plot(Time, gly, xlab="Time", ylab="Glycine", col=7)
+ plot(Time, h2o2, xlab="Time", ylab="H2O2", col=8)
+ plot(Time, his, xlab="Time", ylab="Histidine", col=9)
+ 
+  dev.off()
+  
+png("Rates3.png", width=800, height=550) 
+ 
+ par(mfrow=c(2, 4))
+ plot(Time, ile, xlab="Time", ylab="Isoleucine", col=2)
+ plot(Time, leu, xlab="Time", ylab="Leucine", col=3)
+ plot(Time, met, xlab="Time", ylab="Metionine", col=4)
+ plot(Time, mobd, xlab="Time", ylab="Molibdene", col=5)
+ plot(Time, nh4, xlab="Time", ylab="NH4", col=6)
+ plot(Time, ni2, xlab="Time", ylab="Ni2+", col=7)
+ plot(Time, phe, xlab="Time", ylab="Phenylalanine", col=8)
+ plot(Time, pro, xlab="Time", ylab="Proline", col=9)
+
+ dev.off()
+
+png("Rates4.png", width=800, height=550) 
+
+ par(mfrow=c(2, 4))
+ plot(Time, pyr, xlab="Time", ylab="Pyruvate", col=2)
+ plot(Time, ser, xlab="Time", ylab="Serine", col=3)
+ plot(Time, succ, xlab="Time", ylab="Succinate", col=4)
+ plot(Time, thr, xlab="Time", ylab="Threonine", col=5)
+ plot(Time, tyr, xlab="Time", ylab="Tyrosine", col=6)
+ plot(Time, urea, xlab="Time", ylab="Urea", col=7)
+ plot(Time, val, xlab="Time", ylab="Valine", col=8)
+ plot(Time, tnf, xlab="Time", ylab="TNF", col=9)
+ 
+  dev.off()
+  
+  
+#MULTIPLE REGRESSION FOR ALANINE
+
+alalm <- lm(ala~ X4crsol + X5drib + aconm + amob + dalua + X5mtr + akg + ala + alltn + arg + ile + phe + asp + cobalt + cu2 + cys + fe3 + glc + gln + glu + gly + h2o2 + his + ile + lac + leu + lys + met + mobd + nh4 + ni2 + pacald + phe + pro + pyr + ser + succ + thr + trp + tungs + tyr + urea + val + tnf)
+
+
+  

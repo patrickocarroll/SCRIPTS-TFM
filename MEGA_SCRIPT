@@ -1,0 +1,244 @@
+#THE FILE WE WILL LOAD IS ALREADY PROCESSED AND COMPOSED OF 32 COLUMNS (metabolites) AND 434 ROWS (time-steps) 
+
+
+getwd()
+
+setwd("~/work/mellado/MetNet/fed-batch/tnf/analysis_patrick/Files")
+setwd("C:/Users/User/Desktop")
+
+
+
+#PRE-PROCESSING STEPS (INPUT, VISUALIZATION)
+
+tnf_rates <- read.table("calculated_rates.tab", header=T, row.names=1)
+
+str(tnf_rates) #shows the structure of the dataset,including class and head of data
+
+attach(tnf_rates)
+
+
+png("Rates1.png", width=800, height=550) 
+
+
+
+par(mfrow=c(2, 4)) #plotting eight graphs in the same display
+ 
+plot(Time, X4crsol, xlab="Time", ylab="4- Cresol", col=2)
+ 
+plot(Time, X5drib, xlab="Time", ylab="5drib", col=3)
+ 
+plot(Time, amob, xlab="Time", ylab="amob", col=4)
+ 
+plot(Time, dalua, xlab="Time", ylab="dalua", col=5)
+ 
+plot(Time, X5mtr, xlab="Time", ylab="5mtr", col=6)
+ 
+plot(Time, ala, xlab="Time", ylab="Alanine", col=7)
+ 
+plot(Time, lys, xlab="Time", ylab="Lysine", col=8)
+ 
+plot(Time, asp, xlab="Time", ylab="Aspartic acid", col=9)
+ 
+ 
+
+dev.off()
+
+png("Rates2.png", width=800, height=550) 
+ 
+ 
+par(mfrow=c(2, 4))
+ 
+plot(Time, cobalt, xlab="Time", ylab="Cobalt", col=2)
+ 
+plot(Time, cu2, xlab="Time", ylab="Cu2+", col=3)
+ 
+plot(Time, fe3, xlab="Time", ylab="Fe3+", col=4)
+ 
+plot(Time, glc, xlab="Time", ylab="Glucose", col=5)
+ 
+plot(Time, glu, xlab="Time", ylab="Glutamate", col=6)
+ 
+plot(Time, gly, xlab="Time", ylab="Glycine", col=7)
+ 
+plot(Time, h2o2, xlab="Time", ylab="H2O2", col=8)
+ 
+plot(Time, his, xlab="Time", ylab="Histidine", col=9)
+ 
+
+  dev.off()
+  
+
+
+png("Rates3.png", width=800, height=550) 
+
+ 
+ par(mfrow=c(2, 4))
+
+
+ plot(Time, ile, xlab="Time", ylab="Isoleucine", col=2)
+ 
+plot(Time, leu, xlab="Time", ylab="Leucine", col=3)
+ 
+plot(Time, met, xlab="Time", ylab="Metionine", col=4)
+ 
+plot(Time, mobd, xlab="Time", ylab="Molibdene", col=5)
+ 
+plot(Time, nh4, xlab="Time", ylab="NH4", col=6)
+ 
+plot(Time, ni2, xlab="Time", ylab="Ni2+", col=7)
+ 
+plot(Time, phe, xlab="Time", ylab="Phenylalanine", col=8)
+ 
+plot(Time, pro, xlab="Time", ylab="Proline", col=9)
+
+
+
+ dev.off()
+
+
+png("Rates4.png", width=800, height=550) 
+
+ 
+
+par(mfrow=c(2, 4))
+ 
+plot(Time, pyr, xlab="Time", ylab="Pyruvate", col=2)
+
+plot(Time, ser, xlab="Time", ylab="Serine", col=3)
+ 
+plot(Time, succ, xlab="Time", ylab="Succinate", col=4)
+ 
+plot(Time, thr, xlab="Time", ylab="Threonine", col=5)
+ 
+plot(Time, tyr, xlab="Time", ylab="Tyrosine", col=6)
+ 
+plot(Time, urea, xlab="Time", ylab="Urea", col=7)
+ 
+plot(Time, val, xlab="Time", ylab="Valine", col=8)
+ 
+plot(Time, tnf, xlab="Time", ylab="TNF", col=9)
+ 
+  
+
+dev.off()
+  
+ #TESTING CORRELATION BETWEEN VARIABLES
+ #will be useful to visually observe the linearity of each variable against each other
+ 
+ install.packages("GGplot2", dep=T)
+ install.packages("GGally", dep=T)
+ install.packages("magrittr", dep=T)
+ 
+ library(GGplot2)
+ library(GGally)
+ library(magrittr)
+
+ggscatmat(tnf_rates, columns=1:ncol(tnf_rates), corMethod="spearman")
+
+#STEP 1. CREATING LINEAR MODEL BASED ON MULTIPLE REGRESSION 
+
+#MULTIPLE REGRESSION FOR ALANINE (REDUCED VARIABLES)
+
+alalm <- lm(ala~ X4crsol + cu2 + fe3 + glc 
++ gly + glu + h2o2 + his + lys + met + mobd + nh4 + ni2 
++ phe + pyr + ser + succ + thr
++ urea + tnf)
+summary(alalm)
+
+
+#MULTIPLE REGRESSION FOR TNF
+
+tnflm <- lm(tnf~ X4crsol + cu2 + fe3 + glc 
++ gly + glu + h2o2 + his + lys + met + mobd + nh4 + ni2 
++ phe + pyr + ser + succ + thr
++ urea + ala)
+summary(tnflm)
+
+#MULTIPLE REGRESSION FOR PROLINE
+
+hislm <-  lm(his~ X4crsol + cu2 + fe3 + glc 
++ gly + glu + h2o2 + ala + lys + met + mobd + nh4 + ni2 
++ phe + pyr + ser + succ + thr
++ urea + tnf)
+summary(hislm)
+
+#We test a few metabolites to make sure it works for many variables without problems
+
+# STEP 2. FEATURE SELECTION BASED ON WRAPPER METHODS FOR SELECTING MOST SIGNIFICANT VARIABLES IN THE MODEL
+# WE WILL FOCUS ON BORUTA ALGORITHM
+
+library(Boruta)
+
+borutaala <- Boruta(ala~ X4crsol + cu2 + fe3 + glc 
++ gly + glu + h2o2 + his + lys + met + mobd + nh4 + ni2 
++ phe + pyr + ser + succ + thr+ urea + tnf, 
+data=tnf_rates, maxRuns=200, pValue=0.005, doTrace=2, mcAdj=T)
+  
+  print(borutaala)
+  attStats(borutaala)
+  
+borutatnf <- Boruta(tnf ~ X4crsol + X5drib + amob + dalua + X5mtr + asp + cobalt +
+			  met + mobd + nh4 + ni2 + phe + pro + pyr + ser + succ + thr + 
+ 			  tyr + urea + val + ala, data=tnf_rates, maxRuns=200, pValue=0.005, doTrace=2, mcAdj=T)
+ 
+ print(borutatnf)
+ attStats(borutatnf)
+ 
+#IT CAN ALSO BE PERFORMED USING STEPWISE SELECTION:
+
+# Stepwise Regression
+library(MASS) #MASS is the package from which we use stepAIC()
+fit <- lm(y~x1+x2+x3,data=mydata) #We can use the model we have created called "alalm"
+step <- stepAIC(fit, direction="both") #Command by which we perform stepwise selection. arguments are our model and direction (forward, backward, both)
+step$anova # display results 
+
+#Results from alalm example in different directions:
+#
+#BOTH:
+#    	ala ~ X4crsol + asp + fe3 + glc + glu + gly + h2o2 + his + lys + 
+#    	nh4 + phe + pyr + ser + succ + thr + urea
+#
+#FORWARD:
+#
+# 	Doesn't eliminate any features, don't know why. Same as initial model
+#
+#BACKWARD:
+#
+#
+#	ala ~ X4crsol + asp + fe3 + glc + glu + gly + h2o2 + his + lys + 
+#   	nh4 + phe + pyr + ser + succ + thr + urea
+#
+#IN THIS CASE, STEPWISE ONLY ACTS ON BACKWARD ELIMINATION, NO FORWARD SELECTION IS PERFORMED
+
+
+
+
+
+#CREATING LOOP FOR MULTIPLE REGRESSIONS. option 1
+
+mets <- c(X4crsol, X5drib, amob, dalua, X5mtr, ala, asp, cobalt, cu2, fe3, glc, glu, gly, 
+h2o2, his, ile, leu, lys, met, mobd, nh4, ni2, phe, pro, pyr, ser, succ, thr, tyr, urea, val, tnf)
+
+for(i in seq(along=mets) {
+	model <- lm (
+	
+   print(summary(model))
+   
+
+
+
+#CREATING LOOP FOR MULTIPLE REGRESSIONS. option 2
+#need to create file with outputs (sink())
+#need to specify which metabolite is being chosen as independent variable for each test (cannot simply print i)
+#need to specify that the regression must exclude the independent variable as dependent
+
+for (i in 1:ncol(tnf_rates)) {
+	model <- lm(tnf_rates[, i] ~ tyr + pyr)
+	print(i) 
+	
+	
+	print(summary(model))
+	
+}	
+
+borutaala <- Boruta(ala ~ X4crsol + X5drib + amob + dalua + X5mtr + asp + cobalt + met + mobd + nh4 + ni2 + phe + pro + pyr + ser + succ + thr + tyr + urea + val + tnf,

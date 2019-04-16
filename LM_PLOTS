@@ -1,0 +1,77 @@
+
+#REQUIRES RUNNING "LINEAR MODELS" SCRIPT IN WHICH EACH LINEAR MODEL IS GENERATED
+
+#----------PLOTTING THE SIMULATION DEPENDENCIES AND THE MODEL RESPONSE-----------#
+
+
+png("LinearModel1.png", width=800, height=550) 
+
+par(mfrow=c(2, 5))
+
+plot(rates$ala, xlab="Time", ylab="Alanine")
+lines(predict(alalm), col=2)
+
+plot(rates$tnf, xlab="Time", ylab="TNF")
+lines(predict(tnflm), col=2)
+
+plot(rates$glc, xlab="Time", ylab="Glucose")
+lines(predict(glclm), col=2)
+
+plot(rates$nh4, xlab="Time", ylab="NH4")
+lines(predict(nh4lm), col=2)
+
+plot(rates$pyr, xlab="Time", ylab="Pyruvate")
+lines(predict(pyrlm), col=2)
+
+plot(rates$succ, xlab="Time", ylab="Succinate")
+lines(predict(succlm), col=2)
+
+plot(rates$asp, xlab="Time", ylab="Aspartic Acid")
+lines(predict(asplm), col=2)
+
+plot(rates$glu, xlab="Time", ylab="Glutamine")
+lines(predict(glulm), col=2)
+
+plot(rates$ser, xlab="Time", ylab="Serine")
+lines(predict(serlm), col=2)
+
+plot(rates$his, xlab="Time", ylab="Histidine")
+lines(predict(hislm), col=2)
+
+dev.off()
+
+png("LinearModel2.png", width=800, height=550) 
+
+par(mfrow=c(2, 5))
+
+plot(rates$val, xlab="Time", ylab="Valine")
+lines(predict(vallm), col=2)
+
+plot(rates$leu, xlab="Time", ylab="Leucine")
+lines(predict(leulm), col=2)
+
+plot(rates$ile, xlab="Time", ylab="Isoleucine")
+lines(predict(ilelm), col=2)
+
+plot(rates$pro, xlab="Time", ylab="Proline")
+lines(predict(prolm), col=2)
+
+plot(rates$tyr, xlab="Time", ylab="Tyrosine")
+lines(predict(tyrlm), col=2)
+
+plot(rates$phe, xlab="Time", ylab="Phenylalanine")
+lines(predict(phelm), col=2)
+
+plot(rates$met, xlab="Time", ylab="Methionine")
+lines(predict(metlm), col=2)
+
+plot(rates$lys, xlab="Time", ylab="Lysine")
+lines(predict(lyslm), col=2)
+
+plot(rates$gly, xlab="Time", ylab="Glycine")
+lines(predict(glylm), col=2)
+
+plot(rates$thr, xlab="Time", ylab="Threonine")
+lines(predict(thrlm), col=2)
+
+dev.off()

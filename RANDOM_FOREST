@@ -1,0 +1,86 @@
+#--------------INITIAL STEPS-----------------#
+
+library(ggplot2)
+library(cowplot)
+
+library(randomForest)
+
+getwd()
+
+setwd("~/work/mellado/MetNet/fed-batch/tnf/analysis_patrick")
+
+concs <- read.table("TNF_concentrations.tab", header=T, row.names=1)
+rates <- read.table("processed_rates.csv", header=T, row.names=1)
+
+str(tnf_rates) #shows the structure of the dataset,including class and head of data
+
+
+#--------------IMPUTING THE RANDOM FOREST-------------# (ONLY IF REQUIRED)
+
+# set.seed(42) #random number generator
+
+# data.imputed <- rfImpute(rates$tnf ~., data=concs, iter=6)  
+
+#Here we generate random number for IMPUTING MISSING VALUES 
+
+
+
+#---------------BUILDING A RANDOM FOREST--------------#
+
+alaforest <- randomForest(rates$ala ~., data=concs, proximity=T)
+
+#proximity=T will return the proximity matrix which will be required to cluster the samples afterwards
+
+#If the response variable (y) is continuous, it will assume we are doing a regression
+#If we don't specify a response variable, it will compute in "unsupervised mode"
+#Default number of trees is 500
+#Number of variables tried at each split = Default is number of variables divided by 3
+
+alaforest
+
+varplot <- varImpPlot(alaforest)
+#Dotchart of variable importance as measured by a random forest
+
+
+alaforest <- randomForest(y=rates$ala, x=concs, data=concs, proximity=T)
+
+
+
+
+
+
+
+
+
+
+
+
+#Results:
+#OOB (Out-of-bag error estimate): Percentage of missclasified OOB samples by the random forest
+#Remember that each tree is generated randomly and usually leaves observations out of the "bag"
+#Confusion matrix: Matrix showing relationship between correctly/incorrectly classified outcome possibilities
+
+
+
+
+#-----------HOW MANY TREES MUST WE USE TO CONSIDER OPTIMAL REGRESSION?----------#
+
+#To see if 500 trees (default) is enough, we can plot the error rates using GGplot2
+
+
+model <- alaforest
+
+oob.error.data <- data.frame(
+Trees=rep(1:nrow(model$rate), times=3),
+Type=rep(c("OOB", "Healthy", "Unhealthy"), each=nrow(model$err.rate))
+Error=c(model$err.rate[,"OOB"],
+	model$err.rate[,"Response"]))
+	
+#Creating dataframe containing organized error information
+
+ggplot(data=oob.error.data, aes(x=Trees, y=Error)) +
+	geom_line(aes(color=Type))
+	
+	
+
+
